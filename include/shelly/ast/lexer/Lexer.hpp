@@ -31,8 +31,8 @@ public:
     /// @return Optional that contains the current token if it exists.
     std::optional<Token> peek();
 
-    /// @brief Returns true if end of the issued command is not reacher. Otherwise, false.
-    /// @return True if end of the issued command is not reacher. Otherwise, false.
+    /// @brief Returns true if end of the issued command is not reached. Otherwise, false.
+    /// @return True if end of the issued command is not reached. Otherwise, false.
     bool hasTokensLeft();
 
 protected:
