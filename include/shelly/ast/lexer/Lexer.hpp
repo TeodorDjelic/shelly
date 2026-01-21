@@ -2,8 +2,6 @@
 
 #include <optional>
 
-#include "shelly/common/OperationResult.hpp"
-
 #include "Token.hpp"
 
 namespace shelly::ast {
@@ -45,11 +43,11 @@ private:
     uint16_t charPointer = 0;
 
     /// @brief Result of an operation inside the Lexer (method, function, lambda).  
-    /// @note SUCCESS indicates the operation completed successfully.  
+    /// @note Success indicates the operation completed successfully.  
     /// @todo There should be an error log manager, and all "errors" should be sent to it.
     ///       Methods and functions should either fail and terminate, fail and recover, or succeed.
     enum class OperationResult {  
-        Sucess,                  ///< Operation completed successfully  
+        Success,                  ///< Operation completed successfully  
     };
 
     inline char getAndAdvanceChar();
