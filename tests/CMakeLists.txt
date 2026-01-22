@@ -3,6 +3,11 @@ function (add_gtests test_dirname)
         ${ARGN}
     )
 
+    target_include_directories(${test_dirname}
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_SOURCE_DIR}
+    )
     target_link_libraries(${test_dirname}
         PRIVATE
         GTest::gtest
