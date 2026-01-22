@@ -22,7 +22,10 @@ public:
     /// @brief Instantiates a token without data.
     /// @param tokenKind Token kind.
     /// @param location  Token location.
-    Token(TokenKind tokenKind, Location location) : Token(tokenKind, location, "") {}
+    Token(TokenKind tokenKind, Location location) : tokenKind(tokenKind), location(location)
+    {
+        assert(!isStringLiteral() && "You must assign data to a STRING_LITERAL token!");
+    }
 
     /// @brief Instantiates a token containing data.
     /// @param tokenKind Token kind.
