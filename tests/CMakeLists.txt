@@ -4,12 +4,10 @@ function (add_gtests test_dirname)
     )
 
     target_include_directories(${test_dirname}
-        PUBLIC
-            ${PROJECT_SOURCE_DIR}/include
         PRIVATE
+            ${PROJECT_SOURCE_DIR}/include
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
-
     target_link_libraries(${test_dirname}
         PRIVATE
         GTest::gtest
