@@ -6,13 +6,12 @@ namespace shelly::ast
 Lexer::Lexer(std::string input) : input(input) {}
 
 std::optional<Token> Lexer::consume() {
-    nextTokenLoaded = false;
     loadNextToken();
-
     if (!nextTokenLoaded) {
         return std::nullopt;
     }
-
+    
+    nextTokenLoaded = false;
     return nextToken;
 }
 
