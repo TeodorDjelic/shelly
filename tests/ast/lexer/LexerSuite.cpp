@@ -7,42 +7,73 @@
 #include "shelly/ast/lexer/Lexer.hpp"
 
 using namespace shelly::ast;
-
 using LexerTestParam = std::pair<std::string, std::vector<Token>>;
 class LexerTest : public ::testing::TestWithParam<LexerTestParam> {};
 
-TEST_P(LexerTest, LexerProducesExpectedTokensSuccess) {
-    const auto& [input, expectedTokens] = GetParam();
+void expectTokensEqual(const Token& token1, const Token& token2) {
+    EXPECT_EQ(token1.getKind(), token2.getKind());
+
+    EXPECT_EQ(token1.getLocation().getCharPosition(), token2.getLocation().getCharPosition());
+
+        
+    EXPECT_EQ(token1.getLocation().getLinePosition(), token2.getLocation().getLinePosition());
+
+    if (token1.getKind() == TokenKind::STRING_LITERAL) {
+        EXPECT_EQ(token1.getData(), token2.getData());
+    }
+}
+
+TEST(LexerTest, LexerPeekApiVerification) {
+    std::string input = "test.cmd arg1 >output <input";
 
     Lexer lexer(input);
 
     std::vector<Token> actual;
 
     while (lexer.hasTokensLeft()) {
-        actual.push_back(lexer.consume().value());
-    }
 
-    ASSERT_EQ(actual.size(), expectedTokens.size());
+        Token token1 = lexer.peek().value();
+        Token token2 = lexer.peek().value();
+        Token token3 = lexer.consume().value();
 
-    for (size_t i = 0; i < actual.size(); ++i) {
-        EXPECT_EQ(actual[i].getKind(), expectedTokens[i].getKind());
-
-        EXPECT_EQ(actual[i].getLocation().getCharPosition(), expectedTokens[i].getLocation().getCharPosition())
-            << "Token index " << i;
-
-            
-        EXPECT_EQ(actual[i].getLocation().getLinePosition(), expectedTokens[i].getLocation().getLinePosition())
-            << "Token index " << i;
-
-        if (actual[i].getKind() == TokenKind::STRING_LITERAL) {
-            EXPECT_EQ(actual[i].getData(), expectedTokens[i].getData())
-                << "Token index " << i;
-        }
+        expectTokensEqual(token1, token2);
+        expectTokensEqual(token2, token3);
+        expectTokensEqual(token1, token3);
     }
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    LexerCases,
+    StringsAndErrorRedirectionsLexedCorrectly,
+    LexerTest,
+    ::testing::Values(
+        LexerTestParam(
+            "test.cmd 2>test",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test.cmd"),
+                Token(TokenKind::ERROR_REDIRECTION, Location(1, 10)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 12), "test"),
+            }
+        ),
+        LexerTestParam(
+            "test.cmd 2test",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test.cmd"),
+                Token(TokenKind::STRING_LITERAL, Location(1, 10), "2test"),
+            }
+        ),
+        LexerTestParam(
+            "test.cmd >2test",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test.cmd"),
+                Token(TokenKind::OUTPUT_REDIRECTION, Location(1, 10)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 11), "2test"),
+            }
+        )
+    )
+);
+
+INSTANTIATE_TEST_SUITE_P(
+    LexerProducesExpectedTokensSuccess,
     LexerTest,
     ::testing::Values(
         LexerTestParam{
@@ -81,3 +112,21 @@ INSTANTIATE_TEST_SUITE_P(
         }
     )
 );
+
+TEST_P(LexerTest, LexerTokensTests) {
+    const auto& [input, expectedTokens] = GetParam();
+
+    Lexer lexer(input);
+
+    std::vector<Token> actual;
+
+    while (lexer.hasTokensLeft()) {
+        actual.push_back(lexer.consume().value());
+    }
+
+    ASSERT_EQ(actual.size(), expectedTokens.size());
+
+    for (size_t i = 0; i < actual.size(); ++i) {
+        expectTokensEqual(actual[i], expectedTokens[i]);
+    }
+}
