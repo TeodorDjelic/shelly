@@ -14,5 +14,5 @@ target_link_libraries(core
 )
 
 target_link_libraries(core
-    INTERFACE 
+    PRIVATE ast
 )
