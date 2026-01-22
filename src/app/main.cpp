@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "shelly/core/shell.hpp"
+#include "shelly/core/Shell.hpp"
 
 int main(int, char**){
     shelly::core::Shell shell;
