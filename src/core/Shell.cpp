@@ -1,4 +1,4 @@
-#include "shelly/core/shell.hpp"
+#include "shelly/core/Shell.hpp"
 
 namespace shelly::core {
 
