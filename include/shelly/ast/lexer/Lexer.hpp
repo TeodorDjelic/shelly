@@ -59,7 +59,7 @@ private:
 
     void loadNextToken();
 
-    inline OperationResult loadStringLiteral();
+    inline OperationResult loadStringLiteral(Location tokenLocation);
 
     bool isSpecialTokenHit();
 

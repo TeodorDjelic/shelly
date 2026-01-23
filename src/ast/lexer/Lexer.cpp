@@ -71,7 +71,7 @@ void Lexer::loadNextToken() {
         }
         [[fallthrough]];
         default: {
-            tokenLexingResult = loadStringLiteral();
+            tokenLexingResult = loadStringLiteral(tokenLocation);
             break;
         }
     }
@@ -104,8 +104,7 @@ void Lexer::skipWhitespace() {
     }
 }
 
-Lexer::OperationResult Lexer::loadStringLiteral() {
-    uint16_t startingChar = charPointer + 1;
+Lexer::OperationResult Lexer::loadStringLiteral(Location tokenLocation) {
     std::string tokenData;
 
     while (hasCharsLeft()) {
@@ -116,7 +115,7 @@ Lexer::OperationResult Lexer::loadStringLiteral() {
         tokenData += getAndAdvanceChar();
     }
 
-    nextToken = Token(TokenKind::STRING_LITERAL, Location(1, startingChar), tokenData);
+    nextToken = Token(TokenKind::STRING_LITERAL, tokenLocation, tokenData);
 
     return OperationResult::Success;
 }
