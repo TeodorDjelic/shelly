@@ -1,4 +1,4 @@
-#include <map>
+
 #include <string>
 #include <vector>
 
@@ -15,7 +15,7 @@ void expectTokensEqual(const Token& expectedToken, const Token& actualToken) {
 
     EXPECT_EQ(expectedToken.getLocation().getCharPosition(), actualToken.getLocation().getCharPosition());
 
-        
+
     EXPECT_EQ(expectedToken.getLocation().getLinePosition(), actualToken.getLocation().getLinePosition());
 
     if (expectedToken.getKind() == TokenKind::STRING_LITERAL) {
