@@ -87,6 +87,13 @@ TEST(LexerTest, LexerHasTokensLeftApiVerificationWhenInputIsEmptyString) {
     EXPECT_FALSE(lexer.hasTokensLeft());
 }
 
+TEST(LexerTest, LexerHasTokensLeftApiVerificationWhenInputIsWhitespaceString) {
+    std::string input = " \t\n\r\v\f";
+
+    Lexer lexer(input);
+    EXPECT_FALSE(lexer.hasTokensLeft());
+}
+
 INSTANTIATE_TEST_SUITE_P(
     StringsAndErrorRedirectionsLexedCorrectly,
     LexerTest,

@@ -39,6 +39,10 @@ void Lexer::loadNextToken() {
         return;
     }
     
+    /// @note This lexer is intended for single-line command input, so all tokens  
+    ///       are reported as being on line 1 by design. If multi-line input is ever  
+    ///       supported, line tracking should be added and used here instead of the  
+    ///       hard-coded line number.
     Location tokenLocation = Location(1, charPointer + 1);
 
     OperationResult tokenLexingResult = OperationResult::Success;
