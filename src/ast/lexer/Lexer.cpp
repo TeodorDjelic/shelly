@@ -101,7 +101,7 @@ void Lexer::revertAdvanceChar() {
     charPointer--;
 }
 
-inline bool Lexer::hasCharsLeft() {
+bool Lexer::hasCharsLeft() {
     return charPointer < input.size();
 }
 
