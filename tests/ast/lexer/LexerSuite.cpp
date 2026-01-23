@@ -15,7 +15,6 @@ void expectTokensEqual(const Token& expectedToken, const Token& actualToken) {
 
     EXPECT_EQ(expectedToken.getLocation().getCharPosition(), actualToken.getLocation().getCharPosition());
 
-
     EXPECT_EQ(expectedToken.getLocation().getLinePosition(), actualToken.getLocation().getLinePosition());
 
     if (expectedToken.getKind() == TokenKind::STRING_LITERAL) {
@@ -44,10 +43,8 @@ TEST(LexerTest, LexerConsumeApiVerificationWhenHasTokensLeftIsFalseAndNonEmptyIn
 
     Lexer lexer(input);
 
-    Token lastToken(TokenKind::UNKNOWN, Location(0, 0));
-
     while (lexer.hasTokensLeft()) {
-        lastToken = lexer.consume().value();
+        lexer.consume().value();
     }
 
     EXPECT_FALSE(lexer.consume().has_value());
