@@ -3,7 +3,7 @@
 namespace shelly::ast
 {
 
-Lexer::Lexer(std::string input) : input(input) {}
+Lexer::Lexer(std::string input) : input(std::move(input)) {}
 
 std::optional<Token> Lexer::consume() {
     loadNextToken();
@@ -67,7 +67,7 @@ void Lexer::loadNextToken() {
                 nextToken = Token(TokenKind::ERROR_REDIRECTION, tokenLocation);
                 break;
             }
-            reverseAdvanceChar();
+            revertAdvanceChar();
         }
         [[fallthrough]];
         default: {
@@ -83,14 +83,17 @@ void Lexer::loadNextToken() {
 }
 
 char Lexer::getAndAdvanceChar() {
+    assert(charPointer != input.size() && "Char pointer is at the input's end - getAndAdvanceChar");
     return input[charPointer++];
 }
 
 char Lexer::getAndRetainChar() {
+    assert(charPointer != input.size() && "Char pointer is at the input's end - getAndRetainChar");
     return input[charPointer];
 }
 
-void Lexer::reverseAdvanceChar() {
+void Lexer::revertAdvanceChar() {
+    assert(charPointer != 0 && "Cannot revert advancing of char because char pointer points at the input start");
     charPointer--;
 }
 
