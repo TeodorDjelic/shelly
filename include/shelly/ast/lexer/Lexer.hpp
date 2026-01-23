@@ -61,6 +61,8 @@ private:
 
     inline OperationResult loadStringLiteral();
 
+    bool isSpecialTokenHit();
+
 };
 
 } // namespace shelly::ast

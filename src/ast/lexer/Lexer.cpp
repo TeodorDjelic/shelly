@@ -105,8 +105,7 @@ void Lexer::skipWhitespace() {
 }
 
 Lexer::OperationResult Lexer::loadStringLiteral() {
-
-    int startingChar = charPointer + 1;
+    uint16_t startingChar = charPointer + 1;
     std::string tokenData;
 
     while (hasCharsLeft()) {

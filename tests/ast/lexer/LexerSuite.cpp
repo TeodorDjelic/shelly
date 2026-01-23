@@ -161,6 +161,45 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+INSTANTIATE_TEST_SUITE_P(
+    LexerProducesExpectedTokensWhenNoWhitespaces,
+    LexerTest,
+    ::testing::Values(
+        LexerTestParam{
+            "test1.cmd|test2.cmd",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test1.cmd"),
+                Token(TokenKind::PIPE, Location(1, 10)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 11), "test2.cmd"),
+            }
+        },
+        LexerTestParam{
+            "test1.cmd>output",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test1.cmd"),
+                Token(TokenKind::OUTPUT_REDIRECTION, Location(1, 10)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 11), "output"),
+            }
+        },
+        LexerTestParam{
+            "test1.cmd<input",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test1.cmd"),
+                Token(TokenKind::INPUT_REDIRECTION, Location(1, 10)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 11), "input"),
+            }
+        },
+        LexerTestParam{
+            "test1.cmd2>output",
+            {
+                Token(TokenKind::STRING_LITERAL, Location(1, 1), "test1.cmd2"),
+                Token(TokenKind::OUTPUT_REDIRECTION, Location(1, 11)),
+                Token(TokenKind::STRING_LITERAL, Location(1, 12), "output"),
+            }
+        }
+    )
+);
+
 TEST_P(LexerTest, LexerTokensTests) {
     const auto& [input, expectedTokens] = GetParam();
 
