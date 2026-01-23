@@ -40,7 +40,7 @@ void Lexer::loadNextToken() {
     }
     
     Location tokenLocation = Location(1, charPointer + 1);
-    std::string data;
+
     OperationResult tokenLexingResult = OperationResult::Success;
 
     char currChar = getAndRetainChar();
@@ -105,11 +105,15 @@ void Lexer::skipWhitespace() {
 }
 
 Lexer::OperationResult Lexer::loadStringLiteral() {
-    
-    int startingChar = charPointer + 1;
-    std::string tokenData = "";
 
-    while (hasCharsLeft() && !whitespace.contains(getAndRetainChar())) {
+    int startingChar = charPointer + 1;
+    std::string tokenData;
+
+    while (hasCharsLeft()) {
+        char c = getAndRetainChar();
+        if (whitespace.contains(c) || c == '|' || c == '>' || c == '<') {
+            break;
+        }
         tokenData += getAndAdvanceChar();
     }
 
