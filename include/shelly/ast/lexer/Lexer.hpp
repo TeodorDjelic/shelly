@@ -52,14 +52,14 @@ private:
 
     inline char getAndAdvanceChar();
     inline char getAndRetainChar();
-    inline void reverseAdvanceChar();
+    inline void revertAdvanceChar();
     inline bool hasCharsLeft();
 
     void skipWhitespace();
 
     void loadNextToken();
 
-    inline OperationResult loadStringLiteral();
+    inline OperationResult loadStringLiteral(Location tokenLocation);
 
 };
 

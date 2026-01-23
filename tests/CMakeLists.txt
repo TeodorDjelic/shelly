@@ -28,3 +28,5 @@ add_subdirectory(
     ${CMAKE_SOURCE_DIR}/third_party/googletest
     ${CMAKE_BINARY_DIR}/googletest-build
 )
+
+add_subdirectory(ast)

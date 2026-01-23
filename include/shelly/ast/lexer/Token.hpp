@@ -22,7 +22,10 @@ public:
     /// @brief Instantiates a token without data.
     /// @param tokenKind Token kind.
     /// @param location  Token location.
-    Token(TokenKind tokenKind, Location location) : Token(tokenKind, location, "") {}
+    Token(TokenKind tokenKind, Location location) : tokenKind(tokenKind), location(location)
+    {
+        assert(!isStringLiteral() && "You must assign data to a STRING_LITERAL token!");
+    }
 
     /// @brief Instantiates a token containing data.
     /// @param tokenKind Token kind.
@@ -35,27 +38,27 @@ public:
 
     /// @brief Returns kind of this token.
     /// @return Kind of this token.
-    inline TokenKind getKind() { return tokenKind; }
+    inline TokenKind getKind() const { return tokenKind; }
 
     /// @brief Check if token is of kind tokenKind.
     /// @param tokenKind Token kind for which the check is performed.
     /// @return True if the token kinds match. Otherwise, false.
-    inline bool is(TokenKind tokenKind) { return this->tokenKind == tokenKind; }
+    inline bool is(TokenKind tokenKind) const { return this->tokenKind == tokenKind; }
 
     /// @brief Check if the token is a string literal token.
     /// @return True if the token is a string literal token.
-    inline bool isStringLiteral() { return this->tokenKind == TokenKind::STRING_LITERAL; }
+    inline bool isStringLiteral() const { return this->tokenKind == TokenKind::STRING_LITERAL; }
     
     /// @brief Returns token data.
     /// @return Token data.
-    inline const std::string& getData() {
+    inline const std::string& getData() const {
         assert(isStringLiteral() && "Cannot get data from a non-STRING_LITERAL token!");
         return data;
     }
 
     /// @brief Returns token location information.
     /// @return Token location information.
-    inline const Location getLocation() { return location; }
+    inline Location getLocation() const { return location; }
 
 protected:
 private:
