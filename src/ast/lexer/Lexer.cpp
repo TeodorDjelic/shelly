@@ -17,6 +17,10 @@ std::optional<Token> Lexer::consume() {
 
 std::optional<Token> Lexer::peek() {
     loadNextToken();
+    if (!nextTokenLoaded) {
+        return std::nullopt;
+    }
+
     return nextToken;
 }
 

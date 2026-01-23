@@ -58,14 +58,11 @@ TEST(LexerTest, LexerPeekApiVerificationWhenHasTokensLeftIsFalseAndNonEmptyInput
 
     Lexer lexer(input);
 
-    Token lastToken(TokenKind::UNKNOWN, Location(0, 0));
-
     while (lexer.hasTokensLeft()) {
-        lastToken = lexer.consume().value();
+        lexer.consume().value();
     }
 
-    ASSERT_TRUE(lexer.peek().has_value());
-    expectTokensEqual(lastToken, lexer.peek().value());
+    EXPECT_FALSE(lexer.peek().has_value());
 
 }
 
