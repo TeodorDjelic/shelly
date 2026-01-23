@@ -10,25 +10,69 @@ using namespace shelly::ast;
 using LexerTestParam = std::pair<std::string, std::vector<Token>>;
 class LexerTest : public ::testing::TestWithParam<LexerTestParam> {};
 
-void expectTokensEqual(const Token& token1, const Token& token2) {
-    EXPECT_EQ(token1.getKind(), token2.getKind());
+void expectTokensEqual(const Token& expectedToken, const Token& actualToken) {
+    EXPECT_EQ(expectedToken.getKind(), actualToken.getKind());
 
-    EXPECT_EQ(token1.getLocation().getCharPosition(), token2.getLocation().getCharPosition());
+    EXPECT_EQ(expectedToken.getLocation().getCharPosition(), actualToken.getLocation().getCharPosition());
 
         
-    EXPECT_EQ(token1.getLocation().getLinePosition(), token2.getLocation().getLinePosition());
+    EXPECT_EQ(expectedToken.getLocation().getLinePosition(), actualToken.getLocation().getLinePosition());
 
-    if (token1.getKind() == TokenKind::STRING_LITERAL) {
-        EXPECT_EQ(token1.getData(), token2.getData());
+    if (expectedToken.getKind() == TokenKind::STRING_LITERAL) {
+        EXPECT_EQ(expectedToken.getData(), actualToken.getData());
     }
 }
 
-TEST(LexerTest, LexerPeekApiVerification) {
+TEST(LexerTest, LexerConsumeApiVerificationWhenHasTokensLeftIsFalseAndEmptyInput) {
+    std::string input = "";
+
+    Lexer lexer(input);
+
+    EXPECT_FALSE(lexer.consume().has_value());
+}
+
+TEST(LexerTest, LexerPeekApiVerificationWhenHasTokensLeftIsFalseAndEmptyInput) {
+    std::string input = "";
+
+    Lexer lexer(input);
+
+    EXPECT_FALSE(lexer.peek().has_value());
+}
+
+TEST(LexerTest, LexerConsumeApiVerificationWhenHasTokensLeftIsFalseAndNonEmptyInput) {
     std::string input = "test.cmd arg1 >output <input";
 
     Lexer lexer(input);
 
-    std::vector<Token> actual;
+    Token lastToken(TokenKind::UNKNOWN, Location(0, 0));
+
+    while (lexer.hasTokensLeft()) {
+        lastToken = lexer.consume().value();
+    }
+
+    EXPECT_FALSE(lexer.consume().has_value());
+}
+
+TEST(LexerTest, LexerPeekApiVerificationWhenHasTokensLeftIsFalseAndNonEmptyInput) {
+    std::string input = "test.cmd arg1 >output <input";
+
+    Lexer lexer(input);
+
+    Token lastToken(TokenKind::UNKNOWN, Location(0, 0));
+
+    while (lexer.hasTokensLeft()) {
+        lastToken = lexer.consume().value();
+    }
+
+    ASSERT_TRUE(lexer.peek().has_value());
+    expectTokensEqual(lastToken, lexer.peek().value());
+
+}
+
+TEST(LexerTest, LexerPeekConsumeApiVerificationWhenHasTokensLeftIsTrue) {
+    std::string input = "test.cmd arg1 >output <input";
+
+    Lexer lexer(input);
 
     while (lexer.hasTokensLeft()) {
 
@@ -40,6 +84,13 @@ TEST(LexerTest, LexerPeekApiVerification) {
         expectTokensEqual(token2, token3);
         expectTokensEqual(token1, token3);
     }
+}
+
+TEST(LexerTest, LexerHasTokensLeftApiVerificationWhenInputIsEmptyString) {
+    std::string input = "";
+
+    Lexer lexer(input);
+    EXPECT_FALSE(lexer.hasTokensLeft());
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -127,6 +178,6 @@ TEST_P(LexerTest, LexerTokensTests) {
     ASSERT_EQ(actual.size(), expectedTokens.size());
 
     for (size_t i = 0; i < actual.size(); ++i) {
-        expectTokensEqual(actual[i], expectedTokens[i]);
+        expectTokensEqual(expectedTokens[i], actual[i]);
     }
 }
