@@ -112,6 +112,7 @@ Lexer::OperationResult Lexer::loadStringLiteral(Location tokenLocation) {
         if (whitespace.contains(c) || c == '|' || c == '>' || c == '<') {
             break;
         }
+        /// @remark Potential performance issue, string is appended char by char and reallocated after each append
         tokenData += getAndAdvanceChar();
     }
 
